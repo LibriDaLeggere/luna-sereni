@@ -116,7 +116,8 @@
     <p class="intro">Hai appena chiuso il libro e forse qualcosa ti è rimasto addosso. <em>Mi piacerebbe saperlo.</em>
       Lasciami i tuoi contatti: ti scriverò quando ci saranno novità, contenuti nuovi e il prossimo libro.</p>
 
-    <form id="modulo" novalidate>
+    <iframe name="invio" id="invio" title="invio" style="display:none"></iframe>
+    <form id="modulo" method="POST" action="https://script.google.com/macros/s/AKfycbywL79kXBSFoJGMORxN2iUhce9YsER3CEQniPpTsLY1piZGK47OEFCXKWZT2SQ3izeA/exec" target="invio" accept-charset="UTF-8" novalidate>
       <div class="riga">
         <div class="campo"><label for="nome">Nome</label><input id="nome" name="nome" type="text" autocomplete="given-name" required></div>
         <div class="campo"><label for="cognome">Cognome</label><input id="cognome" name="cognome" type="text" autocomplete="family-name" required></div>
@@ -172,7 +173,13 @@
     if (d.get("sito_web")) return;                       // compilato solo dai bot
     bottone.disabled = true; bottone.textContent = "Invio in corso…";
     try {
-      await fetch(ENDPOINT, { method: "POST", mode: "no-cors", credentials: "omit", cache: "no-store", body: new URLSearchParams(d) });
+      // Invio classico del modulo in un riquadro nascosto: funziona su tutti i telefoni e nei browser interni delle app
+      await new Promise((ok) => {
+        const riquadro = document.getElementById("invio");
+        riquadro.onload = ok;
+        setTimeout(ok, 8000);
+        HTMLFormElement.prototype.submit.call(form);
+      });
       form.style.display = "none";
       document.getElementById("grazie").style.display = "block";
       window.scrollTo({ top: 0, behavior: "smooth" });
