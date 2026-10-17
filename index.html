@@ -172,7 +172,7 @@
     if (d.get("sito_web")) return;                       // compilato solo dai bot
     bottone.disabled = true; bottone.textContent = "Invio in corso…";
     try {
-      await fetch(ENDPOINT, { method: "POST", mode: "no-cors", body: new URLSearchParams(d) });
+      await fetch(ENDPOINT, { method: "POST", mode: "no-cors", credentials: "omit", cache: "no-store", body: new URLSearchParams(d) });
       form.style.display = "none";
       document.getElementById("grazie").style.display = "block";
       window.scrollTo({ top: 0, behavior: "smooth" });
